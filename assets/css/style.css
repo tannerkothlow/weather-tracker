@@ -1,43 +1,79 @@
-/* :root {
- 
-} */
-
-* {
-    background-color: black;
-    color: antiquewhite;
+:root {
+    --dark-bkg: rgb(34, 33, 36);
+    --light-text: rgb(199, 201, 206);
+    --card-color: rgb(48, 48, 167);
+    --main-bkg: rgb(206, 206, 236);
+}
+body {
+    background-color: var(--dark-bkg);
+    /* color: antiquewhite; */
 }
 
 header h1{
-    background-color: navy;
-    color: antiquewhite;
+    background-color: var(--card-color);
+    color: var(--light-text);
     display: block;
     padding: 30px;
 }
-
+.function {
+    display: flex;
+    align-items: flex-start;
+}
 nav {
-    background-color: antiquewhite;
+    background-color: var(--main-bkg);
     width: 30%;
     margin: 2%;
+    padding-bottom: 160px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 nav h2 {
-    background-color: antiquewhite;
+    /* background-color: antiquewhite; */
     color: navy;
     margin: 2%;
 }
 
 nav button {
-    background-color: goldenrod;
+    background-color: var(--card-color);
+    color: var(--light-text);
     display: block;
-    font-size: 30px;
+    font-size: 20px;
+    padding: 5px;
+    width: 60%;
     margin: 2%;
 }
 
 main {
-    background-color: antiquewhite;
+    background-color: var(--main-bkg);
     width: 60%;
     margin: 2%;
+}
+
+main h3 {
+    margin: 2%;
+}
+
+main ol {
+    list-style: none;
+    margin-left: 2%;
+    margin-bottom: 2%;
+}
+
+.five-day-forecast {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid var(--dark-bkg);
+}
+
+.day-card {
+    display: inline-block;
+    width: 20%;
+    background-color: var(--card-color);
+    color: var(--light-text);
+    padding: 20px;
+    margin: 1%;
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
