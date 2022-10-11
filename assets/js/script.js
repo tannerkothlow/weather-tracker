@@ -4,6 +4,7 @@ $("button").click(function () {
     // Removes list elements and clears weather image
     $("#current-weather").empty();
     $("#weather-icon").remove();
+    $(".five-day-forecast").empty();
 
     let city = this.id
     let unit = "imperial"
@@ -35,15 +36,23 @@ $("button").click(function () {
             $("#place-date").text(data.city.name + " " + data.list[0].dt_txt + " ");
             $("#place-date").append("<img id='weather-icon' src='http://openweathermap.org/img/wn/" + data.list[0].weather[0].icon + ".png' />");
 
-            $("#current-weather").append("<li>Temp: " + data.list[0].main.temp + " °F</li>")
-            $("#current-weather").append("<li>Wind: " + data.list[0].wind.speed + " mph</li>")
-            $("#current-weather").append("<li>Humidity: " + data.list[0].main.humidity + "%</li>")
+            $("#current-weather").append("<li>Temp: " + data.list[0].main.temp + " °F</li>");
+            $("#current-weather").append("<li>Wind: " + data.list[0].wind.speed + " mph</li>");
+            $("#current-weather").append("<li>Humidity: " + data.list[0].main.humidity + "%</li>");
 
             //Forecast Population
 
-            for (let i = 0; i < 5; i++) {
-                $(".five-day-forecast").append("<div class ='day-card'> <ol> </ol> </div>")
-            }
+            for(let x = 0; x < data.list.length; x++) {
+                if (data.list[x].dt_txt.includes("18:00:00")) {
+                    $(".five-day-forecast").append("<div class ='day-card'> <ol>" + 
+                    "<li>" + data.list[x].dt_txt + "</li>" +
+                    "<li> <img src='http://openweathermap.org/img/wn/" + data.list[x].weather[0].icon + ".png' /> </li>" +
+                    "<li>Temp: " + data.list[x].main.temp + " °F</li>" +
+                    "<li>Wind: " + data.list[x].wind.speed + " mph</li>" +
+                    "<li>Humidity: " + data.list[x].main.humidity + "%</li>" +
+                    "</ol> </div>");
+                };
+            };
             
             for(let x = 0; x < data.list.length; x++) {
             //Maybe just use moment.js so I dont have to reconfigure everything.
