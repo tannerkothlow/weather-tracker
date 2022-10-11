@@ -55,6 +55,11 @@ main h3 {
     margin: 2%;
 }
 
+#place-date {
+    display: flex;
+    align-items: center;
+}
+
 main ol {
     list-style: none;
     margin-left: 2%;

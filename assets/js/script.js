@@ -1,13 +1,12 @@
 $("button").click(function () {
-    console.log(this.id);
 
-    //For Minneapolis MN
-    // let lat = 44.9778
-    // let lon = -93.2650
+    console.log("Button ID: " + this.id);
+    // Removes list elements and clears weather image
+    $("#current-weather").empty();
+    $("#weather-icon").remove();
 
     let city = this.id
     let unit = "imperial"
-    // fetch("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
 
     // GEOCODE
     fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1" + "&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
@@ -31,10 +30,21 @@ $("button").click(function () {
             console.log(data);
             console.log("City: " + data.city.name);
 
-            // if (data.list[6].dt_txt.includes("12:00:00")) {
-            //     console.log("includes works")
-            // }
+            //Current Weather Population
 
+            $("#place-date").text(data.city.name + " " + data.list[0].dt_txt + " ");
+            $("#place-date").append("<img id='weather-icon' src='http://openweathermap.org/img/wn/" + data.list[0].weather[0].icon + ".png' />");
+
+            $("#current-weather").append("<li>Temp: " + data.list[0].main.temp + " °F</li>")
+            $("#current-weather").append("<li>Wind: " + data.list[0].wind.speed + " mph</li>")
+            $("#current-weather").append("<li>Humidity: " + data.list[0].main.humidity + "%</li>")
+
+            //Forecast Population
+
+            for (let i = 0; i < 5; i++) {
+                $(".five-day-forecast").append("<div class ='day-card'> <ol> </ol> </div>")
+            }
+            
             for(let x = 0; x < data.list.length; x++) {
             //Maybe just use moment.js so I dont have to reconfigure everything.
                 if (data.list[x].dt_txt.includes("12:00:00")) {
@@ -45,13 +55,5 @@ $("button").click(function () {
                 };
             };
         });
-
-        // fetch("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&cnt=5&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
-        // .then(function(response) {
-        //     return response.json();
-        // })
-        // .then(function(data) {
-        //     console.log(data);
-        // })
     });
 });
