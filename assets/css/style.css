@@ -35,6 +35,14 @@ nav h2 {
     margin: 2%;
 }
 
+#city-searcher {
+    display: flex;
+}
+
+#city-searcher button {
+    margin: 0px;
+}
+
 nav button {
     background-color: var(--card-color);
     color: var(--light-text);
