@@ -23,7 +23,7 @@ nav {
     background-color: var(--main-bkg);
     width: 30%;
     margin: 2%;
-    padding-bottom: 160px;
+    padding-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,10 +37,17 @@ nav h2 {
 
 #city-searcher {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 3px solid var(--dark-bkg);
+    width: 100%;
+    padding-bottom: 0%;
 }
 
-#city-searcher button {
-    margin: 0px;
+#city-entry {
+    font-size: 15px;
+    padding: 2%;
+    width: 86%;
 }
 
 nav button {
@@ -49,9 +56,10 @@ nav button {
     display: block;
     font-size: 20px;
     padding: 5px;
-    width: 60%;
+    width: 90%;
     margin: 2%;
 }
+
 
 main {
     background-color: var(--main-bkg);

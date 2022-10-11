@@ -1,6 +1,6 @@
 $(".city-button").click(function () {
 
-    clearEntries();
+    //clearEntries();
 
     let city = this.id
     let unit = "imperial"
@@ -15,7 +15,7 @@ $("#city-searcher").submit(function (event) {
         return;
     }
 
-    clearEntries();
+    //clearEntries();
 
     let city = encodeURIComponent($("#city-entry").val())
     let unit = "imperial"
@@ -24,9 +24,9 @@ $("#city-searcher").submit(function (event) {
 
     console.log("Form submit works");
     console.log($("#city-entry").val());
-    $("#city-entry").val("");
+    //Clears search bar
+    //$("#city-entry").val("");
 });
-
 
 var pullWeatherData = function(city, unit) {
     // GEOCODE
@@ -40,6 +40,8 @@ var pullWeatherData = function(city, unit) {
             console.log("ERROR Did not enter a valid city")
             return;
         }
+
+        clearEntries();
 
         console.log(data[0]);
         console.log(data[0].lat + " " + data[0].lon);
@@ -83,16 +85,8 @@ var pullWeatherData = function(city, unit) {
                     "</ol> </div>");
                 };
             };
-            
-            for(let x = 0; x < data.list.length; x++) {
-            //Maybe just use moment.js so I dont have to reconfigure everything.
-                if (data.list[x].dt_txt.includes("12:00:00")) {
-                    console.log("Date and time GMT: " + data.list[x].dt_txt);
-                    console.log("Temp: " + data.list[x].main.temp + " F");
-                    console.log("Wind: " + data.list[x].wind.speed + " mph");
-                    console.log("Humidity: " + data.list[x].main.humidity + "%");
-                };
-            };
+            //$("nav").append('<button class ="city-button" id="' + city + '">' + data.city.name + '</button>');
+            //$("nav").append('<button class ="city-button" id="Minneapolis">Minneapolis</button>');
         });
     });
 }
@@ -103,6 +97,9 @@ var clearEntries = function() {
     $("#weather-icon").remove();
     $(".five-day-forecast").empty();
 
+    $("#city-entry").val("")
+
 }
 
+pullWeatherData("Saint%20Louis%20Park", "imperial");
 //console.log(encodeURIComponent("Los Angeles"));
