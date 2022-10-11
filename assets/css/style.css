@@ -2,28 +2,38 @@
     --dark-bkg: rgb(34, 33, 36);
     --light-text: rgb(199, 201, 206);
     --card-color: rgb(48, 48, 167);
-    --main-bkg: rgb(206, 206, 236);
+    --main-bkg: rgb(75, 75, 88);
 }
+
 body {
     background-color: var(--dark-bkg);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     /* color: antiquewhite; */
 }
 
 header h1{
-    background-color: var(--card-color);
+    background: linear-gradient(0.05turn, rgb(48, 48, 167), rgb(63, 31, 136));
     color: var(--light-text);
     display: block;
     padding: 30px;
+    padding-left: 3.5%;
+    /* text-align: end; */
 }
+
 .function {
     display: flex;
     align-items: flex-start;
 }
+
 nav {
-    background-color: var(--main-bkg);
+    /* background-color: var(--main-bkg); */
     width: 30%;
     margin: 2%;
     padding-bottom: 20px;
+    border-right: 3px solid var(--main-bkg);
+}
+
+#nav-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,17 +41,19 @@ nav {
 
 nav h2 {
     /* background-color: antiquewhite; */
-    color: navy;
+    color: var(--light-text);
+    flex-direction: row;
     margin: 2%;
+    margin-left: 5%;
 }
 
 #city-searcher {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-bottom: 3px solid var(--dark-bkg);
+    /* border-bottom: 3px solid var(--light-text); */
     width: 100%;
-    padding-bottom: 0%;
+    padding-bottom: 3%;
 }
 
 #city-entry {
@@ -50,30 +62,78 @@ nav h2 {
     width: 86%;
 }
 
-nav button {
+#city-search {
     background-color: var(--card-color);
+    width: 90%;
+}
+
+#error {
+    font-size: 15px;
+    color: rgb(187, 55, 55);
+}
+
+#city-search:hover {
+    background-color: rgb(61, 61, 199);
+    cursor: pointer;
+}
+
+#button-container {
+    border-top: 3px solid var(--main-bkg);
+    width: 90%;
+    padding-top: 3%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+nav button {
+    background-color: var(--main-bkg);
     color: var(--light-text);
     display: block;
     font-size: 20px;
     padding: 5px;
-    width: 90%;
+    width: 100%;
     margin: 2%;
+    border-radius: 3px;
 }
 
+nav button:hover {
+    background-color: rgb(109, 109, 129);
+    color: rgb(199, 201, 206);
+    cursor: pointer;
+}
 
 main {
-    background-color: var(--main-bkg);
-    width: 60%;
-    margin: 2%;
+    /* background-color: var(--main-bkg); */
+    width: 64%;
+    margin-top: 2%;
 }
 
 main h3 {
+    margin: 1%;
+    margin-left: 2%;
+}
+
+.current-day {
+    color: var(--light-text);
+    background-color: var(--main-bkg);
+    /* border: 3px solid var(--light-text); */
+    padding-bottom: 4%;
+}
+
+.current-day ol {
+    padding-left: 2%;
+}
+
+.current-day li {
+    font-size: 18px;
     margin: 2%;
 }
 
 #place-date {
     display: flex;
     align-items: center;
+    font-size: 25px;
 }
 
 main ol {
@@ -93,8 +153,21 @@ main ol {
     width: 20%;
     background-color: var(--card-color);
     color: var(--light-text);
-    padding: 20px;
-    margin: 1%;
+    padding: 5px;
+    margin: 3px;
     margin-top: 2%;
     margin-bottom: 2%;
 }
+
+.day-card ol {
+    padding-bottom: 2%;
+}
+.day-card li {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.day-card li:first-child {
+    font-size: 20px;
+    font-weight: bolder;
+} 

@@ -12,6 +12,7 @@ $("#city-searcher").submit(function (event) {
     event.preventDefault();
     if ($("#city-entry").val() === "") {
         console.log("No city entered");
+        errorHandler(0);
         return;
     }
 
@@ -38,6 +39,7 @@ var pullWeatherData = function(city, unit) {
         //If user did not enter a real city
         if (data == false) {
             console.log("ERROR Did not enter a valid city")
+            errorHandler(1);
             return;
         }
 
@@ -66,7 +68,7 @@ var pullWeatherData = function(city, unit) {
             $("#place-date").append("<img id='weather-icon' src='http://openweathermap.org/img/wn/" + data.list[0].weather[0].icon + ".png' />");
 
             $("#current-weather").append("<li>Temp: " + data.list[0].main.temp + " °F</li>");
-            $("#current-weather").append("<li>Wind: " + data.list[0].wind.speed + " mph</li>");
+            $("#current-weather").append("<li>Wind: " + data.list[0].wind.speed + " MPH</li>");
             $("#current-weather").append("<li>Humidity: " + data.list[0].main.humidity + "%</li>");
 
             //Forecast Population
@@ -80,7 +82,7 @@ var pullWeatherData = function(city, unit) {
                     "<li>" + dayDate + "</li>" +
                     "<li> <img src='http://openweathermap.org/img/wn/" + data.list[x].weather[0].icon + ".png' /> </li>" +
                     "<li>Temp: " + data.list[x].main.temp + " °F</li>" +
-                    "<li>Wind: " + data.list[x].wind.speed + " mph</li>" +
+                    "<li>Wind: " + data.list[x].wind.speed + " MPH</li>" +
                     "<li>Humidity: " + data.list[x].main.humidity + "%</li>" +
                     "</ol> </div>");
                 };
@@ -101,5 +103,21 @@ var clearEntries = function() {
 
 }
 
-pullWeatherData("Saint%20Louis%20Park", "imperial");
+var errorHandler = function(type) {
+    if (type === 0) {
+        //Type 0 Error No City Entered
+        $("#city-searcher").append("<p id='error'>No City Entered!</p>")
+        setTimeout(function() {
+        $("#error").remove();
+        }, 2000);
+    } else {
+        //Type 1 Error No City Found
+        $("#city-searcher").append("<p id='error'>City Not Found! Try Again</p>")
+        setTimeout(function() {
+        $("#error").remove();
+        }, 2000);
+    }
+}
+
+//pullWeatherData("Saint%20Louis%20Park", "imperial");
 //console.log(encodeURIComponent("Los Angeles"));
