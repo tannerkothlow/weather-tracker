@@ -14,7 +14,7 @@ The search bar was another interesting challenge. The buttons could be assigned 
 
 ## Installation 
 
-N/A Already deployed on GitHub pages. (url)
+N/A Already deployed on GitHub pages. https://tannerkothlow.github.io/weather-tracker/
 
 ## Usage
 
