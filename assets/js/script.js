@@ -16,8 +16,6 @@ $("#city-searcher").submit(function (event) {
         return;
     }
 
-    //clearEntries();
-
     let city = encodeURIComponent($("#city-entry").val())
     let unit = "imperial"
     
@@ -25,8 +23,7 @@ $("#city-searcher").submit(function (event) {
 
     console.log("Form submit works");
     console.log($("#city-entry").val());
-    //Clears search bar
-    //$("#city-entry").val("");
+  // Create a button just like the city button
 });
 
 var pullWeatherData_old = function(city, unit) {
@@ -148,10 +145,6 @@ function pullWeatherData (city, unit) {
     for (let i = 0; i < data.list.length; i++) {
       //Adds humidity to the array
       humidity.push(data.list[i].main.humidity);
-      //Grabs an icon
-      if (data.list[i].dt_txt.includes("18:00:00") || iconID === undefined) {
-        iconID = data.list[i].weather[0].icon;
-      }
       //Will only keep the highest max temp
       if (maxTemp < data.list[i].main.temp_max || maxTemp === undefined) {
         maxTemp = data.list[i].main.temp_max;
@@ -164,12 +157,22 @@ function pullWeatherData (city, unit) {
       if (maxWind > data.list[i].wind.speed || maxWind === undefined) {
         maxWind = data.list[i].wind.speed;
       };
-      //Sets the weather icon if it's snowing or raining
-      // if (data.list[i].weather[0].description.includes('rain') && indexDay === false) {
+      //Sets the weather icon if it's raining or snowing, snowing will take priority over rain
+      if (data.list[i].weather[0].description.includes('rain') && indexRain === false && indexSnow === false) {
+        iconID = data.list[i].weather[0].icon;
+        indexRain = true;
+      } else if (data.list[i].weather[0].description.includes('snow') && indexSnow === false) {
+        iconID = data.list[i].weather[0].icon;
+        indexSnow = true;
+      } else if ((indexRain != true || indexSnow != true) && data.list[i].dt_txt.includes('18:00:00')) {
+        iconID = data.list[i].weather[0].icon;
+      };
 
-      // };
-      
       if (indexDay != moment.unix(data.list[i].dt).format("MM/DD/YYYY")) {
+        //In case iconID was never defined. This can happen if the weather API is called at an inopprotune time.
+        if (iconID === undefined) {
+          iconID = data.list[i - 1].weather[0].icon;
+        };
         //Calculate humidity
         let humidOp = 0;
         for (let x = 0; x < humidity.length; x++) {
@@ -177,10 +180,9 @@ function pullWeatherData (city, unit) {
         };
         let aveHumid = Math.round(humidOp / humidity.length);
 
-
         $(".five-day-forecast").append("<div class ='day-card'> <ol>" + 
             "<li>" + indexDay + "</li>" +
-            //"<li> <img src='http://openweathermap.org/img/wn/" + iconID + ".png' /> </li>" +
+            "<li> <img src='http://openweathermap.org/img/wn/" + iconID + ".png' /> </li>" +
             "<li>Max Temp: " + maxTemp + " °F</li>" +
             "<li>Min Temp: " + minTemp + " °F</li>" +
             "<li>Wind: " + maxWind + " MPH</li>" +
@@ -190,9 +192,9 @@ function pullWeatherData (city, unit) {
             maxTemp = undefined;
             minTemp = undefined;
             indexRain = false;
-            rainTime = undefined;
+            // rainTime = undefined;
             indexSnow = false;
-            snowTime = undefined;
+            // snowTime = undefined;
             humidity = [];
             indexDay = moment.unix(data.list[i].dt).format("MM/DD/YYYY");
 
