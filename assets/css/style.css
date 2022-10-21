@@ -29,6 +29,7 @@ nav {
     /* background-color: var(--main-bkg); */
     width: 30%;
     margin: 2%;
+    margin-left: 0px;
     padding-bottom: 20px;
     border-right: 3px solid var(--main-bkg);
 }
@@ -124,7 +125,7 @@ nav button:hover {
 
 main {
     /* background-color: var(--main-bkg); */
-    width: 64%;
+    width: 66.5%;
     margin-top: 2%;
 }
 

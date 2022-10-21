@@ -202,8 +202,8 @@ pullWeatherData = (city, unit, caller) => {
         $(".five-day-forecast").append("<div class ='day-card'> <ol>" + 
             "<li>" + indexDay + "</li>" +
             "<li> <img src='http://openweathermap.org/img/wn/" + iconID + ".png' /> </li>" +
-            "<li>Max Temp: " + maxTemp + " °F</li>" +
-            "<li>Min Temp: " + minTemp + " °F</li>" +
+            "<li>Max Temp: " + Math.round(maxTemp) + " °F</li>" +
+            "<li>Min Temp: " + Math.round(minTemp) + " °F</li>" +
             "<li>Wind: " + maxWind + " MPH</li>" +
             "<li>Humidity: " + aveHumid + "%</li>" +
             "</ol> </div>");
