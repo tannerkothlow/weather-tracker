@@ -83,7 +83,7 @@ nav h2 {
     flex-direction: column;
     align-items: center;
     margin-top: 3%;
-    padding-top: 0px;
+    padding-top: 6px;
 }
 
 #error {

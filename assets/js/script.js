@@ -18,7 +18,10 @@ $(document).on('click', '.city-button', function () {
 });
 
 $(document).on('click', '#clear-button', function (){
-
+  $('#button-container').empty();
+  cityHistory.length = 0;
+  localStorage.setItem('search-history', JSON.stringify(cityHistory));
+  console.log(cityHistory);
 })
 
 $("#city-searcher").submit(function (event) {
@@ -228,7 +231,7 @@ historyButtons = city => {
     };
 
     //Appends the clear button if it doesn't exist
-    if ($('#button-container :last-child').attr('id') != '#clear-box') {
+    if ($('#clear-box').length != true) {
       $('#button-container').append('<div id="clear-box"><button id="clear-button">Clear</button></div>');
     };
 
@@ -240,7 +243,7 @@ historyButtons = city => {
     };
 
     if (newCity) {
-      $('#button-container').append('<button class ="city-button" id="' + city + '">' + city + '</button>');
+      $('#clear-box').before('<button class ="city-button" id="' + city + '">' + city + '</button>');
       cityHistory.push(city);
       localStorage.setItem('search-history', JSON.stringify(cityHistory));
     };
