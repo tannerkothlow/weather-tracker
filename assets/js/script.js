@@ -1,4 +1,4 @@
-$(".city-button").click(function () {
+$(document).on('click', '.city-button', function () {
 
     //clearEntries();
 
@@ -29,7 +29,7 @@ $("#city-searcher").submit(function (event) {
     //$("#city-entry").val("");
 });
 
-var pullWeatherData = function(city, unit) {
+var pullWeatherData_spare = function(city, unit) {
     // GEOCODE
     fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1" + "&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
     .then(function(response) {
@@ -92,6 +92,122 @@ var pullWeatherData = function(city, unit) {
         });
     });
 }
+
+function pullWeatherData (city, unit) {
+  // GEOCODE
+  fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1" + "&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
+  .then(function(response) {
+      return response.json();
+  })
+  .then(function(data) {
+      //If user did not enter a real city
+      if (data == false) {
+          console.log("ERROR Did not enter a valid city")
+          errorHandler(1);
+          return;
+      }
+
+      clearEntries();
+
+      console.log(data[0]);
+      console.log(data[0].lat + " " + data[0].lon);
+
+      let lat = data[0].lat
+      let lon = data[0].lon
+
+      //Using the geocoded lat and lon, get the true weather
+  fetch("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=1168898d2e6677ed97caa56280826004&units=imperial")
+  .then(function(response) {return response.json();})
+  .then(function(data) {
+
+    //console.log(data);
+    //console.log("City: " + data.city.name);
+
+    let indexDay = moment.unix(data.list[0].dt).format("MM/DD/YYYY");
+    let maxTemp 
+    let minTemp
+    let humidity = []
+    let rainTime 
+    let snowTime
+    let indexRain = false;
+    let indexSnow = false;
+    let iconID
+    
+    // Crunches Weather Data
+    for (let i = 0; i < data.list.length; i++) {
+      //Adds humidity to the array
+      humidity.push(data.list[i].main.humidity);
+      //Grabs an icon
+      if (data.list[i].dt_txt.includes("18:00:00") || iconID === undefined) {
+        iconID = data.list[i].weather[0].icon;
+      }
+      //Will only keep the highest max temp
+      if (maxTemp < data.list[i].main.temp_max || maxTemp === undefined) {
+        maxTemp = data.list[i].main.temp_max;
+      };
+      //Will only keep the lowest temp
+      if (minTemp > data.list[i].main.temp_min || minTemp === undefined) {
+        minTemp = data.list[i].main.temp_min;
+      };
+      
+      if (indexDay != moment.unix(data.list[i].dt).format("MM/DD/YYYY")) {
+        //Calculate humidity
+        let humidOp = 0;
+        for (let x = 0; x < humidity.length; x++) {
+          humidOp = humidOp + humidity[x];
+        };
+        let aveHumid = Math.round(humidOp / humidity.length);
+
+      //   // Make the weather note
+      //   let weatherNote = "Weather data for " + indexDay + ": Max Temp: " + maxTemp + " Min Temp: " + minTemp + " Average Humidity of " + aveHumid + "% "
+      //   if (indexRain) {
+      //     weatherNote += "Expect rain at " + rainTime;
+      //   };
+      //   if (indexSnow) {
+      //     weatherNote += " Expect snow at " + snowTime;
+      //   };.
+
+        $(".five-day-forecast").append("<div class ='day-card'> <ol>" + 
+            "<li>" + indexDay + "</li>" +
+            //"<li> <img src='http://openweathermap.org/img/wn/" + data.list[x].weather[0].icon + ".png' /> </li>" +
+            "<li>Max Temp: " + maxTemp + " °F</li>" +
+            "<li>Min Temp: " + minTemp + " °F</li>" +
+            "<li>Wind: " + 'WIND SPEED' + " MPH</li>" +
+            "<li>Humidity: " + aveHumid + "%</li>" +
+            "</ol> </div>");
+
+        //Appends split for code readability
+      //   $('#forecast').append('<div class="forecast-card"><ul>' + '<li>' + indexDay +'</li>' +
+      //   '<li> High of ' + Math.round(maxTemp) + '°F</li><li>Low of ' + Math.round(minTemp) + '°F</li>' +
+      //   '<li>' + aveHumid + '% Humidity</li>' +
+      //   '<li class="bad-weather" id="badw'+i+'"></li>' +
+      //   '<img src="http://openweathermap.org/img/wn/' + iconID + '@2x.png">' +
+      //   '</ul></div>');
+
+        // console.log("#badw"+i)
+
+      //   if (indexRain) {
+      //     $('#badw'+i).append('<p>Expect rain at ' + rainTime + '!</p>');
+      //   };
+      //   if (indexSnow) {
+      //     $('#badw'+i).append('<p>Expect snow at ' + snowTime + '!</p>');
+      //   }
+       
+            maxTemp = undefined;
+            minTemp = undefined;
+            indexRain = false;
+            rainTime = undefined;
+            indexSnow = false;
+            snowTime = undefined;
+            humidity = [];
+            indexDay = moment.unix(data.list[i].dt).format("MM/DD/YYYY");
+
+          };
+        };
+      });
+  });
+}
+  
 
 var clearEntries = function() {
     // Removes list elements and clears weather image
