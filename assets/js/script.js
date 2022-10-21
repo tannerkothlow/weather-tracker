@@ -23,7 +23,7 @@ $("#city-searcher").submit(function (event) {
 
     console.log("Form submit works");
     console.log($("#city-entry").val());
-  // Create a button just like the city button
+    
 });
 
 var pullWeatherData_old = function(city, unit) {
@@ -90,7 +90,7 @@ var pullWeatherData_old = function(city, unit) {
     });
 }
 
-function pullWeatherData (city, unit) {
+pullWeatherData = (city, unit) => {
   // GEOCODE
   fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1" + "&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
   .then(function(response) {
@@ -203,9 +203,18 @@ function pullWeatherData (city, unit) {
       });
   });
 }
-  
 
-var clearEntries = function() {
+historyButtons = city => {
+    // Create a button just like the city button
+    if ($('#button-container').children().length === 0) {
+      $('#button-container').append('<p>History</p>');
+      console.log('No children in button container')
+    };
+    console.log('City button appender value ' + city);
+    $('#button-container').append('<button class ="city-button" id="' + city + '">' + city + '</button>');
+}
+
+function clearEntries() {
     // Removes list elements and clears weather image
     $("#current-weather").empty();
     $("#weather-icon").remove();
@@ -215,7 +224,7 @@ var clearEntries = function() {
 
 }
 
-var errorHandler = function(type) {
+errorHandler = type => {
     if (type === 0) {
         //Type 0 Error No City Entered
         $("#city-searcher").append("<p id='error'>No City Entered!</p>")
