@@ -1,3 +1,12 @@
+const cityHistory = []
+
+const storedHistory = localStorage.getItem('search-history');
+if (storedHistory != undefined) {
+  cityHistory.push(...JSON.parse(storedHistory));
+};
+
+console.log(cityHistory);
+
 $(document).on('click', '.city-button', function () {
 
     //clearEntries();
@@ -5,8 +14,15 @@ $(document).on('click', '.city-button', function () {
     let city = this.id
     let unit = "imperial"
 
-    pullWeatherData(city, unit);
+    pullWeatherData(city, unit, 'button');
 });
+
+$(document).on('click', '#clear-button', function (){
+  $('#button-container').empty();
+  cityHistory.length = 0;
+  localStorage.setItem('search-history', JSON.stringify(cityHistory));
+  console.log(cityHistory);
+})
 
 $("#city-searcher").submit(function (event) {
     event.preventDefault();
@@ -19,11 +35,11 @@ $("#city-searcher").submit(function (event) {
     let city = encodeURIComponent($("#city-entry").val())
     let unit = "imperial"
     
-    pullWeatherData(city, unit);
+    pullWeatherData(city, unit, 'search');
 
     console.log("Form submit works");
     console.log($("#city-entry").val());
-  // Create a button just like the city button
+    
 });
 
 var pullWeatherData_old = function(city, unit) {
@@ -90,7 +106,7 @@ var pullWeatherData_old = function(city, unit) {
     });
 }
 
-function pullWeatherData (city, unit) {
+pullWeatherData = (city, unit, caller) => {
   // GEOCODE
   fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1" + "&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
   .then(function(response) {
@@ -118,7 +134,10 @@ function pullWeatherData (city, unit) {
   .then(function(data) {
 
   console.log(data);
-    //console.log("City: " + data.city.name);
+    // If function is called via search button, run the add button func
+    if (caller === 'search') {
+      historyButtons(data.city.name);
+    };
 
     let indexDay = moment.unix(data.list[0].dt).format("MM/DD/YYYY");
     let maxTemp 
@@ -183,8 +202,8 @@ function pullWeatherData (city, unit) {
         $(".five-day-forecast").append("<div class ='day-card'> <ol>" + 
             "<li>" + indexDay + "</li>" +
             "<li> <img src='http://openweathermap.org/img/wn/" + iconID + ".png' /> </li>" +
-            "<li>Max Temp: " + maxTemp + " °F</li>" +
-            "<li>Min Temp: " + minTemp + " °F</li>" +
+            "<li>Max Temp: " + Math.round(maxTemp) + " °F</li>" +
+            "<li>Min Temp: " + Math.round(minTemp) + " °F</li>" +
             "<li>Wind: " + maxWind + " MPH</li>" +
             "<li>Humidity: " + aveHumid + "%</li>" +
             "</ol> </div>");
@@ -203,9 +222,50 @@ function pullWeatherData (city, unit) {
       });
   });
 }
-  
 
-var clearEntries = function() {
+historyButtons = city => {
+    console.log('Length of button container ' + $('#button-container').children().length);
+    // Create a button just like the city button
+    if ($('#button-container').children().length === 0) {
+      $('#button-container').append('<p id="history-tab">History</p>');
+    };
+
+    //Appends the clear button if it doesn't exist
+    if ($('#clear-box').length != true) {
+      $('#button-container').append('<div id="clear-box"><button id="clear-button">Clear</button></div>');
+    };
+
+    let newCity = true; 
+
+    for (let i = 1; i <= $('#button-container').children().length; i++) {
+      //Detects if the same button has already been created.
+      if ($('#button-container :nth-child('+i+')').attr('id') === city) {newCity = false;};
+    };
+
+    if (newCity) {
+      $('#clear-box').before('<button class ="city-button" id="' + city + '">' + city + '</button>');
+      cityHistory.push(city);
+      localStorage.setItem('search-history', JSON.stringify(cityHistory));
+    };
+
+    
+}
+
+previousButtons = history => {
+  $('#button-container').append('<p id="history-tab">History</p>');
+  for (i = 0; i < history.length; i++) {
+    $('#button-container').append('<button class ="city-button" id="' + history[i] + '">' + history[i] + '</button>');
+  };
+  if ($('#button-container :last-child').attr('id') != '#clear-box') {
+    $('#button-container').append('<div id="clear-box"><button id="clear-button">Clear</button></div>');
+  };
+}
+
+if (cityHistory.length > 0) {
+  previousButtons(cityHistory);
+};
+
+function clearEntries() {
     // Removes list elements and clears weather image
     $("#current-weather").empty();
     $("#weather-icon").remove();
@@ -215,7 +275,7 @@ var clearEntries = function() {
 
 }
 
-var errorHandler = function(type) {
+errorHandler = type => {
     if (type === 0) {
         //Type 0 Error No City Entered
         $("#city-searcher").append("<p id='error'>No City Entered!</p>")
