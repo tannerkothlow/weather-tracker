@@ -1,3 +1,5 @@
+const cityHistory = []
+
 $(document).on('click', '.city-button', function () {
 
     //clearEntries();
@@ -208,12 +210,24 @@ pullWeatherData = (city, unit, caller) => {
 }
 
 historyButtons = city => {
+    console.log('Length of button container ' + $('#button-container').children().length);
     // Create a button just like the city button
     if ($('#button-container').children().length === 0) {
-      $('#button-container').append('<p>History</p>');
-    }; 
-    console.log('City button appender value ' + city);
-    $('#button-container').append('<button class ="city-button" id="' + city + '">' + city + '</button>');
+      $('#button-container').append('<p id="history-tab">History</p>');
+    };
+
+    let newCity = true; 
+    
+    for (let i = 1; i <= $('#button-container').children().length; i++) {
+      //Detects if the same button has already been created.
+      if ($('#button-container :nth-child('+i+')').attr('id') === city) {newCity = false;};
+    };
+
+    if (newCity) {
+      $('#button-container').append('<button class ="city-button" id="' + city + '">' + city + '</button>');
+    };
+
+    cityHistory.push(city);
 }
 
 function clearEntries() {
