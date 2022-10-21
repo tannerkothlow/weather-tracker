@@ -4,6 +4,7 @@ const storedHistory = localStorage.getItem('search-history');
 if (storedHistory != undefined) {
   cityHistory.push(...JSON.parse(storedHistory));
 };
+
 console.log(cityHistory);
 
 $(document).on('click', '.city-button', function () {
@@ -237,6 +238,17 @@ historyButtons = city => {
 
     
 }
+
+previousButtons = history => {
+  $('#button-container').append('<p id="history-tab">History</p>');
+  for (i = 0; i < history.length; i++) {
+    $('#button-container').append('<button class ="city-button" id="' + history[i] + '">' + history[i] + '</button>');
+  };
+}
+
+if (cityHistory.length > 0) {
+  previousButtons(cityHistory);
+};
 
 function clearEntries() {
     // Removes list elements and clears weather image
