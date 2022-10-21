@@ -29,7 +29,7 @@ $("#city-searcher").submit(function (event) {
     //$("#city-entry").val("");
 });
 
-var pullWeatherData_spare = function(city, unit) {
+var pullWeatherData_old = function(city, unit) {
     // GEOCODE
     fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1" + "&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
     .then(function(response) {
@@ -120,18 +120,29 @@ function pullWeatherData (city, unit) {
   .then(function(response) {return response.json();})
   .then(function(data) {
 
-    //console.log(data);
+  console.log(data);
     //console.log("City: " + data.city.name);
 
     let indexDay = moment.unix(data.list[0].dt).format("MM/DD/YYYY");
     let maxTemp 
     let minTemp
     let humidity = []
-    let rainTime 
-    let snowTime
+    let maxWind
+    // let rainTime 
+    // let snowTime
     let indexRain = false;
     let indexSnow = false;
     let iconID
+
+    //Current Weather Population
+
+    $("#place-date").text(data.city.name + " (" + indexDay + ") ");
+    $("#place-date").append("<img id='weather-icon' src='http://openweathermap.org/img/wn/" + data.list[0].weather[0].icon + ".png' />");
+    
+    $("#current-weather").append("<li>Temp: " + data.list[0].main.temp + " °F</li>");
+    $("#current-weather").append("<li>Wind: " + data.list[0].wind.speed + " MPH</li>");
+    $("#current-weather").append("<li>Humidity: " + data.list[0].main.humidity + "%</li>");
+    
     
     // Crunches Weather Data
     for (let i = 0; i < data.list.length; i++) {
@@ -149,6 +160,14 @@ function pullWeatherData (city, unit) {
       if (minTemp > data.list[i].main.temp_min || minTemp === undefined) {
         minTemp = data.list[i].main.temp_min;
       };
+      //Grabs the highest wind speed
+      if (maxWind > data.list[i].wind.speed || maxWind === undefined) {
+        maxWind = data.list[i].wind.speed;
+      };
+      //Sets the weather icon if it's snowing or raining
+      // if (data.list[i].weather[0].description.includes('rain') && indexDay === false) {
+
+      // };
       
       if (indexDay != moment.unix(data.list[i].dt).format("MM/DD/YYYY")) {
         //Calculate humidity
@@ -158,40 +177,15 @@ function pullWeatherData (city, unit) {
         };
         let aveHumid = Math.round(humidOp / humidity.length);
 
-      //   // Make the weather note
-      //   let weatherNote = "Weather data for " + indexDay + ": Max Temp: " + maxTemp + " Min Temp: " + minTemp + " Average Humidity of " + aveHumid + "% "
-      //   if (indexRain) {
-      //     weatherNote += "Expect rain at " + rainTime;
-      //   };
-      //   if (indexSnow) {
-      //     weatherNote += " Expect snow at " + snowTime;
-      //   };.
 
         $(".five-day-forecast").append("<div class ='day-card'> <ol>" + 
             "<li>" + indexDay + "</li>" +
-            //"<li> <img src='http://openweathermap.org/img/wn/" + data.list[x].weather[0].icon + ".png' /> </li>" +
+            //"<li> <img src='http://openweathermap.org/img/wn/" + iconID + ".png' /> </li>" +
             "<li>Max Temp: " + maxTemp + " °F</li>" +
             "<li>Min Temp: " + minTemp + " °F</li>" +
-            "<li>Wind: " + 'WIND SPEED' + " MPH</li>" +
+            "<li>Wind: " + maxWind + " MPH</li>" +
             "<li>Humidity: " + aveHumid + "%</li>" +
             "</ol> </div>");
-
-        //Appends split for code readability
-      //   $('#forecast').append('<div class="forecast-card"><ul>' + '<li>' + indexDay +'</li>' +
-      //   '<li> High of ' + Math.round(maxTemp) + '°F</li><li>Low of ' + Math.round(minTemp) + '°F</li>' +
-      //   '<li>' + aveHumid + '% Humidity</li>' +
-      //   '<li class="bad-weather" id="badw'+i+'"></li>' +
-      //   '<img src="http://openweathermap.org/img/wn/' + iconID + '@2x.png">' +
-      //   '</ul></div>');
-
-        // console.log("#badw"+i)
-
-      //   if (indexRain) {
-      //     $('#badw'+i).append('<p>Expect rain at ' + rainTime + '!</p>');
-      //   };
-      //   if (indexSnow) {
-      //     $('#badw'+i).append('<p>Expect snow at ' + snowTime + '!</p>');
-      //   }
        
             maxTemp = undefined;
             minTemp = undefined;
