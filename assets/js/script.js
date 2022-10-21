@@ -17,6 +17,10 @@ $(document).on('click', '.city-button', function () {
     pullWeatherData(city, unit, 'button');
 });
 
+$(document).on('click', '#clear-button', function (){
+
+})
+
 $("#city-searcher").submit(function (event) {
     event.preventDefault();
     if ($("#city-entry").val() === "") {
@@ -223,6 +227,11 @@ historyButtons = city => {
       $('#button-container').append('<p id="history-tab">History</p>');
     };
 
+    //Appends the clear button if it doesn't exist
+    if ($('#button-container :last-child').attr('id') != '#clear-box') {
+      $('#button-container').append('<div id="clear-box"><button id="clear-button">Clear</button></div>');
+    };
+
     let newCity = true; 
 
     for (let i = 1; i <= $('#button-container').children().length; i++) {
@@ -243,6 +252,9 @@ previousButtons = history => {
   $('#button-container').append('<p id="history-tab">History</p>');
   for (i = 0; i < history.length; i++) {
     $('#button-container').append('<button class ="city-button" id="' + history[i] + '">' + history[i] + '</button>');
+  };
+  if ($('#button-container :last-child').attr('id') != '#clear-box') {
+    $('#button-container').append('<div id="clear-box"><button id="clear-button">Clear</button></div>');
   };
 }
 
