@@ -5,7 +5,7 @@ $(document).on('click', '.city-button', function () {
     let city = this.id
     let unit = "imperial"
 
-    pullWeatherData(city, unit);
+    pullWeatherData(city, unit, 'button');
 });
 
 $("#city-searcher").submit(function (event) {
@@ -19,7 +19,7 @@ $("#city-searcher").submit(function (event) {
     let city = encodeURIComponent($("#city-entry").val())
     let unit = "imperial"
     
-    pullWeatherData(city, unit);
+    pullWeatherData(city, unit, 'search');
 
     console.log("Form submit works");
     console.log($("#city-entry").val());
@@ -90,7 +90,7 @@ var pullWeatherData_old = function(city, unit) {
     });
 }
 
-pullWeatherData = (city, unit) => {
+pullWeatherData = (city, unit, caller) => {
   // GEOCODE
   fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1" + "&appid=1168898d2e6677ed97caa56280826004&units=" + unit)
   .then(function(response) {
@@ -118,7 +118,10 @@ pullWeatherData = (city, unit) => {
   .then(function(data) {
 
   console.log(data);
-    //console.log("City: " + data.city.name);
+    // If function is called via search button, run the add button func
+    if (caller === 'search') {
+      historyButtons(data.city.name);
+    };
 
     let indexDay = moment.unix(data.list[0].dt).format("MM/DD/YYYY");
     let maxTemp 
@@ -208,8 +211,7 @@ historyButtons = city => {
     // Create a button just like the city button
     if ($('#button-container').children().length === 0) {
       $('#button-container').append('<p>History</p>');
-      console.log('No children in button container')
-    };
+    }; 
     console.log('City button appender value ' + city);
     $('#button-container').append('<button class ="city-button" id="' + city + '">' + city + '</button>');
 }
