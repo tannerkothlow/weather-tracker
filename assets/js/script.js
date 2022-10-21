@@ -1,5 +1,11 @@
 const cityHistory = []
 
+const storedHistory = localStorage.getItem('search-history');
+if (storedHistory != undefined) {
+  cityHistory.push(...JSON.parse(storedHistory));
+};
+console.log(cityHistory);
+
 $(document).on('click', '.city-button', function () {
 
     //clearEntries();
@@ -217,7 +223,7 @@ historyButtons = city => {
     };
 
     let newCity = true; 
-    
+
     for (let i = 1; i <= $('#button-container').children().length; i++) {
       //Detects if the same button has already been created.
       if ($('#button-container :nth-child('+i+')').attr('id') === city) {newCity = false;};
@@ -225,9 +231,11 @@ historyButtons = city => {
 
     if (newCity) {
       $('#button-container').append('<button class ="city-button" id="' + city + '">' + city + '</button>');
+      cityHistory.push(city);
+      localStorage.setItem('search-history', JSON.stringify(cityHistory));
     };
 
-    cityHistory.push(city);
+    
 }
 
 function clearEntries() {
